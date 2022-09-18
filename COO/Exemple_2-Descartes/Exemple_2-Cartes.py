@@ -51,7 +51,7 @@ class Carte:
         return f"{hauteur} de {couleur}"
 
     def image(self):
-        fichier = "COO/Exemple_2-cartes/"+str(self.__valeur)+self.__couleur+".GIF"
+        fichier = "COO/Exemple_2-Descartes/carte/"+str(self.__valeur)+self.__couleur+".GIF"
         fenetre = Tk()
         fenetre.geometry('135x192+1000+400')
         image_carte = PhotoImage(file=fichier)
