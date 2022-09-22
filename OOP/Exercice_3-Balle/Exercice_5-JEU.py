@@ -1,4 +1,4 @@
-from tkinter import Tk, Canvas, Button
+from tkinter import Label, IntVar, Tk, Canvas, Button
 from math import cos, sin, radians
 from random import randrange
 
@@ -34,14 +34,15 @@ class Balle :
         # +------------------------+ #
 
         # +-- Création balle --+ #
-        self.balle = self.zoneJ.create_oval(x, y, x+d, y+d, fill=couleur, tag='balle')
+        self.balle = self.zoneJ.create_oval(x, y, x+d, y+d, fill=couleur)
         self.zoneJ.move(self.balle, self.largeurzoneJ/2, self.hauteurzoneJ/2)
         # +--------------------+ #
 
 
     def deplacer(self) :
         self.rebondir() # Pour les paroies (haut, gauche, droite) et raquette.
-        #self.zoneJ.detec_colision() # paroie du bas.
+        self.zoneJ.detec_colision() # paroie du bas.
+
         self.zoneJ.move(self.balle, self.x*self.v, self.y*self.v) # deplacement
     
     def rebondir(self) :
@@ -54,8 +55,12 @@ class Balle :
 
         # +-- Raquette --+ #
         p_raquette = self.zoneJ.raquette.get_position()
+        #milieu_raquette = self.zoneJ.raquette.longueur
         au_dessus = p_balle[0]+self.size > p_raquette[0] and p_balle[2]-self.size < p_raquette[2]
         meme_hauteur = p_balle[3] >= p_raquette[1]
+        #dans_cote_gauche = p_balle[2] >= p_raquette[0] and p_balle[2] <= p_raquette[0] + milieu_raquette
+        #dans_cote_droite = p_balle[0] <= p_raquette[2] and p_balle[0] >= p_raquette[2] - milieu_raquette
+
         touche_raquette = au_dessus and meme_hauteur
         # +--------------+ #
         
@@ -66,13 +71,14 @@ class Balle :
             self.x *= -1
         if touche_raquette :
             self.y *= -1
+            self.zoneJ.set_score()
+        """if meme_hauteur and (dans_cote_droite or dans_cote_gauche):
+            self.zoneJ.detec_colision(True)"""
+
         # +-------------+ #
 
     def get_position(self):
         return self.zoneJ.coords(self.balle)
-
-    def effacer(self):
-        self.zoneJ.delete("all")
 
 # =+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+= #
 ###################################################################################
@@ -125,26 +131,24 @@ class ZoneDeJeu(Canvas) :
         """
         Parametres
         ----------
-        largeur : ...de la zone de jeu.
-        hauteur : ...de la zone de jeu.
+        largeur, hauteur : ...de la zone de jeu.
         """
 
         # +-- Initialisation Canvas --+ #
         Canvas.__init__(self, width = largeur, height = hauteur, bg='white')
         # +---------------------------+ #
         
+        self.debuter_partie()
+
         # +-- Création du jeu --+ #
         self.Game = True
         self.pack()
-        self.creerBalle()
-        self.creerRaquette()
-        self.afficher_balle()
+        self.score = IntVar()
         # +---------------------+ #
-    
     
     def creerBalle(self, size=16, couleur='red'):
         angle = randrange(45,135,30)
-        vitesse = 5
+        vitesse = 2
         self.balle = Balle(self, size, couleur, angle, vitesse)
     
     def creerRaquette(self):
@@ -153,35 +157,42 @@ class ZoneDeJeu(Canvas) :
         self.raquette = Raquette(self, x, y, 100)
 
     def afficher_balle(self):
-        if self.Game == True :
-            self.balle.deplacer()
-            self.update()
-            self.after(10, self.afficher_balle)
-        
-    def detec_colision(self):
-        p_balle = self.coords(self.balle)
-        if p_balle[3] >= self.winfo_reqheight():
-            self.balle.x = 0
-            self.balle.y = 0
-            print("Jusqu'au décès comme on dit hein, voila.")
-            self.Game = False
-            self.balle.effacer()
-            self.raquette.unbind("<Motion>")
+        self.balle.deplacer()
+        self.update()
+        self.after(10, self.afficher_balle)
+
+    def detec_colision(self, hack=False):
+        if not hack :
+            p_balle = self.balle.get_position()
+            if p_balle[3] >= self.winfo_reqheight():
+                print("Décès.")
+                self.effacer()
+                self.unbind("<Motion>")
+        """else :
+            print("ACKER.")
+            self.effacer()
+            self.unbind("<Motion>")"""
         
     def debuter_partie(self):
-        pass
-
-    def jouer(self):
         self.creerBalle()
         self.creerRaquette()
+        self.jouer()
+
+    def effacer(self):
+        self.delete(self.balle.balle)
+        del self.balle
+
+    def jouer(self):
+        self.effacer()
+        self.creerBalle()
+        self.afficher_balle()
         self.bind('<Motion>', self.raquette.deplacer)
 
-        print(self.balle.Game)
-        # reset position balle
-        # reset score
-        # reset vitesse
-        # set to True the game variable
-        pass
+    def get_score(self):
+        return self.score.get()
+
+    def set_score(self):
+        self.score.set(self.get_score()+1)
 
 # =+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+= #
 ###################################################################################
@@ -197,21 +208,15 @@ class Application(Tk):
         #self.zoneJ2 = ZoneDeJeu(100, 300)
         self.btn_Q = Button(self, text = "Quitter", command = self.quitter)
         self.btn_P = Button(self, text = "Jouer", command = self.zoneJ.jouer)
+        self.score = Label(self, textvariable=self.zoneJ.score)
 
-        self.btn_Q.pack(padx=5, pady=10)
+        self.btn_Q.pack(padx=0, pady=0)
         self.btn_P.pack(padx=5, pady=5)
-
-        self.score = 0
+        self.score.pack()
         
     def quitter(self):
         self.destroy()
     
-    def get_score(self):
-        return self.score
-
-    def set_score(self, ajout):
-        self.score += ajout
-
 # =+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+= #
 ###################################################################################
 
