@@ -1,4 +1,3 @@
-from ast import Delete
 from tkinter import Tk, Canvas, Button
 from math import cos, sin, radians
 from random import randrange

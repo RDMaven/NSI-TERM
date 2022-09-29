@@ -76,6 +76,7 @@ class Balle :
             self.y *= -1
             #time.sleep(0.5)
             self.zoneJ.coords(self.balle, p_balle[0], p_raquette[1]-self.size, p_balle[2], p_raquette[1])
+            #self.v = randrange(1,10,1)
             
             #self.zoneJ.update()
             #time.sleep(0.5)
@@ -87,10 +88,10 @@ class Balle :
             touche_brique = meme_hauteur_brique and au_dessus_brique
 
             if touche_brique:
-                #self.zoneJ.set_score(self.zoneJ.get_score()+1)
+                self.zoneJ.set_score(self.zoneJ.get_score()+1)
                 brique.effacer()
                 self.y = abs(self.y)
-                self.v += 1
+                
                 break
 
 
@@ -171,6 +172,10 @@ class Brique:
         self.zoneJ.delete(f'b-{self.x}-{self.y}') #effacer l'élément à l'écran
         index = self.zoneJ.briques.index(self)  
         del self.zoneJ.briques[index] # le supprimer de la liste des briques
+    
+    def deplacer(self):
+        self.zoneJ.move(self.brique, 0, 0.1) # deplacement
+
 
 # =+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+= #
 ###################################################################################
@@ -197,12 +202,12 @@ class ZoneDeJeu(Canvas) :
         # +-- Création du jeu --+ #
         self.Game = True
         self.grid(row=0, column=0, columnspan=3)
-        #self.score = IntVar()
+        self.score = IntVar()
         # +---------------------+ #
     
     def creerBalle(self, size=16, couleur='red'):
         angle = randrange(45,135,30)
-        vitesse = 1
+        vitesse = 5
         self.balle = Balle(self, size, couleur, angle, vitesse)
     
     def creerRaquette(self):
@@ -210,18 +215,22 @@ class ZoneDeJeu(Canvas) :
         y = self.winfo_reqheight() - 20
         self.raquette = Raquette(self, x, y, 10, 10)
 
-    def creerBriques(self, l=20, h=10):
+    def creerBriques(self, l=50, h=10, columns=20):
         self.briques = []
-        for i in range(self.winfo_reqwidth()//l):
-            for j in range(20):
+        self.columns = columns
+        self.l = self.winfo_reqwidth()//l
+        for i in range(self.l):
+            for j in range(self.columns):
                 self.briques.append(Brique(self, l*i,j*h, l, h))
         
     def afficher_balle(self):
         if self.Game == True:    
             self.balle.deplacer()
-            self.raquette.deplacer()
+            try : 
+                self.raquette.deplacer()
+            except :pass
             self.update()
-            self.after(0, self.afficher_balle)
+            self.after(1, self.afficher_balle)
 
     def detec_fin(self):
         p_balle = self.balle.get_position()
@@ -230,10 +239,10 @@ class ZoneDeJeu(Canvas) :
         the_end = touche_bas or plus_de_briques
 
         if the_end:
-            if touche_bas: message = "Oh no ! Tu es mort..."
-            elif plus_de_briques: message = 'Bravo, tu as gagné.'
+            if touche_bas: message = f"Oh no ! Tu es mort... Points : {self.get_score()}"
+            elif plus_de_briques: message = f'Bravo, tu as gagné. Points : {self.get_score()}'
             print(message)
-            #self.set_score(0)
+            self.set_score(0)
             self.effacer()
             self.unbind("<Motion>")
             self.Game = False
@@ -275,11 +284,11 @@ class Application(Tk):
         #self.zoneJ2 = ZoneDeJeu(100, 300)
         self.btn_Q = Button(self, text = "Quitter", command = self.quitter)
         self.btn_P = Button(self, text = "Jouer", command = self.zoneJ.jouer)
-        #self.score = Label(self, textvariable=self.zoneJ.score)
+        self.score = Label(self, textvariable=self.zoneJ.score)
 
         self.btn_Q.grid(row=1, column=0)
         self.btn_P.grid(row=1, column=1)
-        #self.score.grid(row=1, column=2)
+        self.score.grid(row=1, column=2)
         
     def quitter(self):
         self.destroy()
