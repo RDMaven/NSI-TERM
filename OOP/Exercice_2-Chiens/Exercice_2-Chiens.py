@@ -46,8 +46,7 @@ class Chien:
         return today - self._annee
 
     def pure_race(self):
-        if len(self._race) > 1 : return False
-        else : return True
+        return len(self._race) == 1
     
     def __str__(self):
         #tabulate([[self.nom(), self.male_femelle(), self.race(), self.annee(), self.age()]], headers=['Nom', 'Sexe', 'Race', 'Naissance', "Age"], tablefmt='orgtbl')
