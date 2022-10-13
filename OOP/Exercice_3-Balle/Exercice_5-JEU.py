@@ -280,7 +280,7 @@ class Application(Tk):
     def __init__(self):
         Tk.__init__(self)
         self.title("Jeu de balles")
-        self.zoneJ = ZoneDeJeu(300, 400)
+        self.zoneJ = ZoneDeJeu(400, 400)
         #self.zoneJ2 = ZoneDeJeu(100, 300)
         self.btn_Q = Button(self, text = "Quitter", command = self.quitter)
         self.btn_P = Button(self, text = "Jouer", command = self.zoneJ.jouer)
