@@ -3,8 +3,8 @@ class Arbre_binaire:
 
     def __init__(self, valeur=None) -> None:
         self.__valeur = valeur
-        self.__gauche = Arbre_binaire.vide
-        self.__droite = Arbre_binaire.vide
+        self.__gauche = None
+        self.__droite = None
         
     def __str__(self) -> str:
         """Renvoyer une chaine de charactère d'un tuple récursif représentant l'arbre."""
@@ -94,58 +94,79 @@ class Arbre_binaire:
     
     def recherche(self, valeur):
         if not self:
-            return False
+            return f"{valeur} n'est pas dans l'arbre :("
         else:
             valeur_x = self.get_valeur()
             if valeur < valeur_x:
-                return Arbre_binaire.recherche(self.get_droit(), valeur)
-            elif valeur > valeur_x:
                 return Arbre_binaire.recherche(self.get_gauche(), valeur)
+            elif valeur > valeur_x:
+                return Arbre_binaire.recherche(self.get_droit(), valeur)
             else:
-                return True
+                return f"{valeur} est dans l'arbre !"
     
-    def ajout_infixe(self, list, i=0):
+    def ABR_max(self):
         if not self:
-            return []
-        else: 
-            print(i)
-            i += 1
-            Arbre_binaire.ajout_infixe(self.get_gauche(), list, i) 
-            print(True)
-            try : 
-                self.set_valeur(list[i])
-            except:
-                self.set_valeur(None)
-            print(self.get_valeur())
-            [self.get_valeur()] 
-            i += 1
-            
-            Arbre_binaire.ajout_infixe(self.get_droit(), list, i)
-            
+            return -1
+        else:
+            while self.get_droit() and self.get_droit().get_valeur():
+                self = self.get_droit()
+            return print(f"Maximum : {self.get_valeur()}")
+    
+    def ABR_min(self):
+        if not self:
+            return -1
+        else:
+            while self.get_gauche() and self.get_gauche().get_valeur():
+                self = self.get_gauche()
+            return print(f"Minimum : {self.get_valeur()}")
+        
 
-            #return Arbre_binaire.ajout_infixe(self.get_gauche()) + [self.get_valeur()] + Arbre_binaire.ajout_infixe(self.get_droit())
+    def ABR_sorted(self, sortedlist):
+        if len(sortedlist)==0: 
+            return None
+        
+        mid=int(len(sortedlist)/2)
+        
+        self.__valeur=sortedlist[mid]
+        
+        Arbre_binaire.ABR_sorted(self.get_gauche(), sortedlist[:mid])
+        Arbre_binaire.ABR_sorted(self.get_droit(),sortedlist[mid+1:])
+        
+        return self
+    
+   
 
 
 def creer_ABR(list):
-    list = sorted(list)
+    ls = sorted(list)
     a = [(2**i) for i in range(0,10)]
-    b = [sum(a[:i]) for i in range(len(a))]
-    for i in b:
+    nodes_number = [sum(a[:i]) for i in range(len(a))]
+    for i in nodes_number:
         if i >= len(list):
             cases = i
-            break
-    
-    arbre = Arbre_binaire(4)
-    if i >= 3:
-        arbre.insert_gauche(2)
-        arbre.insert_droit(6)
-        if i >= 7:
-            arbre.get_gauche().insert_gauche(1)
-            arbre.get_gauche().insert_droit(3)
-            arbre.get_droit().insert_gauche(5)
-            arbre.get_droit().insert_droit(7)
+            break    
+    if cases >= nodes_number[1]: # 1+
+        arbre = Arbre_binaire(None)
+        arbre.insert_gauche(None)
+        arbre.insert_droit(None)
+        if cases > nodes_number[2]: # 4+
+            arbre.get_gauche().insert_gauche(None)
+            arbre.get_gauche().insert_droit(None)
+            arbre.get_droit().insert_gauche(None)
+            arbre.get_droit().insert_droit(None)
+            if cases > nodes_number[3]: # 7-14
+                arbre.get_gauche().get_gauche().insert_gauche(None)
+                arbre.get_gauche().get_gauche().insert_droit(None)
+                arbre.get_gauche().get_droit().insert_gauche(None)
+                arbre.get_gauche().get_droit().insert_droit(None)
+                arbre.get_droit().get_gauche().insert_gauche(None)
+                arbre.get_droit().get_gauche().insert_droit(None)
+                arbre.get_droit().get_droit().insert_gauche(None)
+                arbre.get_droit().get_droit().insert_droit(None)
+                
 
-    arbre.ajout_infixe(list)  
+    arbre.ABR_sorted(ls)
+
     return arbre
     
 
@@ -169,11 +190,16 @@ print(racine.recherche(50))
 
 """
 
-arbre = creer_ABR([1,2,3,4,5])
+arbre = creer_ABR([25,60,35,10,5,20,65,45,70,40,50,55,30,15])
+print(f"Parcours infixe : {arbre.parcours_infixe()}")
 
-"""print(arbre.parcours_infixe())
-arbre.ajout_infixe()
-print(arbre.parcours_infixe())
-"""
+print(arbre.recherche(70))
+arbre.ABR_max()
+arbre.ABR_min()
+print(f"La hauteur de l'arbre est de {arbre.hauteur()}.")
 
-print(arbre.parcours_infixe())
+from traceABnx import repr_graph
+repr_graph(arbre)
+
+
+
