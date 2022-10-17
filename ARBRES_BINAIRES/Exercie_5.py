@@ -113,6 +113,7 @@ class Arbre_binaire:
             return print(f"Maximum : {self.get_valeur()}")
     
     def ABR_min(self):
+
         if not self:
             return -1
         else:
@@ -121,28 +122,31 @@ class Arbre_binaire:
             return print(f"Minimum : {self.get_valeur()}")
         
 
-    def ABR_sorted(self, sortedlist):
-        if len(sortedlist)==0: 
+    def ABR_sorted(self, valeurs:tuple):
+        if len(valeurs)==0: 
             return None
+        print(valeurs)
+        print(f'SELF : {self}')
+        if self != None:
+            self.__valeur=valeurs[0]
+            self.insert_gauche(valeurs[1])
+            self.insert_droit(valeurs[2])
+            """print(valeurs[0])
         
-        mid=int(len(sortedlist)/2)
-        
-        self.__valeur=sortedlist[mid]
-        
-        Arbre_binaire.ABR_sorted(self.get_gauche(), sortedlist[:mid])
-        Arbre_binaire.ABR_sorted(self.get_droit(),sortedlist[mid+1:])
-        
+            Arbre_binaire.ABR_sorted(self.get_gauche(), valeurs[1])
+            Arbre_binaire.ABR_sorted(self.get_droit(),valeurs[2])
+            """
         return self
     
    
 
 
-def creer_ABR(list):
-    ls = sorted(list)
+def creer_ABR(valeurs):
+    ls = (valeurs)
     a = [(2**i) for i in range(0,10)]
     nodes_number = [sum(a[:i]) for i in range(len(a))]
     for i in nodes_number:
-        if i >= len(list):
+        if i >= len(valeurs):
             cases = i
             break    
     if cases >= nodes_number[1]: # 1+
@@ -190,10 +194,16 @@ print(racine.recherche(50))
 
 """
 
-arbre = creer_ABR([25,60,35,10,5,20,65,45,70,40,50,55,30,15])
+#arbre = creer_ABR([25,60,35,10,5,20,65,45,70,40,50,55,30,15])
+arbre = Arbre_binaire((25, (10, (5, None, None), (20,(15, None, None), None)), (60, (35,(30,None, None), (45,(40, None, None), (50, None, (55, None, None)))), (65, None, (70, None, None)))))
+
+#(25, (10, (5, None, None), (20,(15, None, None), None)), (60, (35,(30,None, None), (45,(40, None, None), (50, None, (55, None, None)))), (65, None, (70, None, None))))
+
+
+
 print(f"Parcours infixe : {arbre.parcours_infixe()}")
 
-print(arbre.recherche(70))
+print(arbre.recherche(40))
 arbre.ABR_max()
 arbre.ABR_min()
 print(f"La hauteur de l'arbre est de {arbre.hauteur()}.")
