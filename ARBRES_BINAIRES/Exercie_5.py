@@ -116,12 +116,40 @@ class Arbre_binaire:
             return print(f"Minimum : {self.get_valeur()}")
         
 
-def creerABR(liste_noeuds, indice=0):
+def creerABR(liste_noeuds:list[int]):
+
+    racine  = Arbre_binaire(liste_noeuds[0])
+
+    for noeud in liste_noeuds[1:]:
+        sous_arbre = racine
+        place=False
+
+        while place==False:
+                
+            if noeud < sous_arbre.get_valeur():
+                if sous_arbre.get_gauche() != None:
+                    sous_arbre = sous_arbre.get_gauche()
+                else:
+                    place=True
+                    sous_arbre.insert_gauche(noeud)
+            else:
+                if sous_arbre.get_droit() != None:
+                    sous_arbre = sous_arbre.get_droit()
+                else:
+                    place=True
+                    sous_arbre.insert_droit(noeud)
+    return racine
+            
+    #pour chaque élément de la liste
+        # tant que il est pas a la bonne place
+            # prendre le sous arbre gauche si il est plus petit que le parent
+            
+            # prendre le sous arbre droit si il est plus grand que le parent
+            
+def creerABR_nul(liste_noeuds, indice=0):
     if len(liste_noeuds)-1 < indice:
         return
-    
     racine  = Arbre_binaire(liste_noeuds[indice])
-    
     if indice*2+1 < len(liste_noeuds):
         racine.gauche_creation(creerABR(liste_noeuds, (indice*2) + 1))
     if indice*2+2 < len(liste_noeuds):
@@ -153,12 +181,12 @@ def creerABR(liste_noeuds, indice=0):
 
 
 arbre = creerABR([25,60,35,10,5,20,65,45,70,40,50,55,30,15])
-"""print(f"Parcours infixe : {arbre.parcours_infixe()}")
+print(f"Parcours infixe : {arbre.parcours_infixe()}")
 
 print(arbre.recherche(40))
 arbre.ABR_max()
 arbre.ABR_min()
 print(f"La hauteur de l'arbre est de {arbre.hauteur()}.")
-"""
+
 from traceABnx import repr_graph
 repr_graph(arbre)
