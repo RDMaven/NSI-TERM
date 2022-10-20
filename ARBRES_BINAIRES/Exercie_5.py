@@ -105,8 +105,9 @@ class Arbre_binaire:
                 self = self.get_droit()
             return print(f"Maximum : {self.get_valeur()}")
     
-    
+
     def ABR_min(self):
+
         if not self:
             return -1
         else:
@@ -130,6 +131,13 @@ def creerABR(liste_noeuds, indice=0):
     
     """if len(liste_noeuds)==0: 
             return None
+        print(valeurs)
+        print(f'SELF : {self}')
+        if self != None:
+            self.__valeur=valeurs[0]
+            self.insert_gauche(valeurs[1])
+            self.insert_droit(valeurs[2])
+           print(valeurs[0])
         
         mid=int(len(liste_noeuds)/2)
         
@@ -137,7 +145,7 @@ def creerABR(liste_noeuds, indice=0):
         
         Arbre_binaire.ABR_sorted(self.get_gauche(), liste_noeuds[:mid])
         Arbre_binaire.ABR_sorted(self.get_droit(),liste_noeuds[mid+1:])
-        """
+    """
    
 
 
@@ -147,7 +155,7 @@ def creerABR(liste_noeuds, indice=0):
 arbre = creerABR([25,60,35,10,5,20,65,45,70,40,50,55,30,15])
 """print(f"Parcours infixe : {arbre.parcours_infixe()}")
 
-print(arbre.recherche(70))
+print(arbre.recherche(40))
 arbre.ABR_max()
 arbre.ABR_min()
 print(f"La hauteur de l'arbre est de {arbre.hauteur()}.")

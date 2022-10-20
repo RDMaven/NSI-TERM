@@ -12,15 +12,24 @@ def stabilite_maximale(n: int, k: int, p: int, accroches: List[int]) -> None:
     # TODO Afficher l'indice de stabilité maximal obtenable.
 
     accroches.sort()
-    
+    """
+    N : [1;12]
+    K : [1;N]
+    P : [1;100 000]
+    accroches : [1;1 000 000 000]
+    """
+
+
     r = []
+    if n < 4:
+        r.append(0)
+
     # 1 stabilisateur
-    if k >= 1 and n >= 4:
+    if n >= 4: # and k >= 1 toujours vrai...
         diff = []
         for i in range(len(accroches)-3):
             diff.append(accroches[i+3]-accroches[i])
         r.append(p-(min(diff)**2))
-    else : r.append(0)
 
     # 2 stabilisateurs
     if k >= 2 and n >= 8 :
