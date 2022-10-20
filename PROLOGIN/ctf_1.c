@@ -3,7 +3,7 @@
 /* WARNING: Instruction at (ram,0x0010132e) overlaps instruction at (ram,0x0010132b)
     */
 
-undefined8 FUN_00101209(void)
+undefined8 main(void)
 
 {
   int iVar1;
