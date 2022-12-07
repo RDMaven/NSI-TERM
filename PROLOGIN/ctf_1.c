@@ -3,7 +3,7 @@
 /* WARNING: Instruction at (ram,0x0010132e) overlaps instruction at (ram,0x0010132b)
     */
 
-undefined8 main(void)
+def main():
 
 {
   int iVar1;

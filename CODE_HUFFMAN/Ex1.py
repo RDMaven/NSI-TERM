@@ -1,5 +1,5 @@
 
-from typing import OrderedDict
+from typing import OrderedDict, Tuple
 
 
 def occurenceLettre(phrase):
@@ -24,6 +24,16 @@ def huffman(listeF):
     return arbreH
 
 def encode(arbreH, code='', dicoHuf={}):
+    """Donne un dictionnaire avec valeurs de chaque caractère en 0 et en 1.
+
+    Args:
+        arbreH (list): Arbre sous forme de liste.
+        code (str): Le code du charactère encodé (modifié lors des réccursions.). Defaults to ''.
+        dicoHuf (dict): dictionnaire des charactères et de leur valeur. Defaults to {}.
+
+    Returns:
+        dicoHuf (dict) : Dictionnaire contenant charactères et leur encodage.
+    """
     if not arbreH:
         return []
     else:
@@ -35,14 +45,24 @@ def encode(arbreH, code='', dicoHuf={}):
         return dicoHuf
     
 
-def compresse(phrase):
+def compresse(phrase:str) -> Tuple[str, float, list]:
+    """Compression d'une phrase
+
+    Args:
+        phrase (str): La phrase à compresser
+
+    Returns:
+        str : La phrase compressée
+        float : le taux de compression.
+        list : l'arbre correspondant sous forme de liste..
+    """
     dicoComp = encode(huffman(ordonne(occurenceLettre(phrase))))
     t_comp = 1- (sum([len(dicoComp[char]) for char in phrase]) / (len(phrase)*8))
-    
     return ''.join([dicoComp[char] for char in phrase]), t_comp, huffman(ordonne(occurenceLettre(phrase)))
     
+
 def decompresse(phraseComp:str, arbreH:list):
-    #dicoHuf = {v :k for k,v in dicoHuf.items()}
+    
     rep = ''
     # tant que le noeud n'est pas une feuille
     for i in range(int(arbreH[0])):
@@ -78,4 +98,5 @@ phraseComp, taux_compression, arbreH = compresse("Par ces paroles, Stubb, sans d
 print(phraseComp)
 print(f'Le taux de compression est de : {round(taux_compression*100, 2)}%')
 pharse_decomp = decompresse(phraseComp, arbreH)
+print(arbreH)
 print(pharse_decomp)

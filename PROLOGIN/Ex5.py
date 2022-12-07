@@ -9,46 +9,40 @@ def stabilite_maximale(n: int, k: int, p: int, accroches: List[int]) -> None:
     :param p: indice de stabilité parfaite
     :param accroches: hauteur de chaque accroche
     """
-    # TODO Afficher l'indice de stabilité maximal obtenable.
-
-    accroches.sort()
-    """
-    N : [1;12]
-    K : [1;N]
-    P : [1;100 000]
-    accroches : [1;1 000 000 000]
-    """
-
-
+    
     r = []
-    if n < 4:
+    accroches.sort()
+    
+    # Si moins de 4 accroches sont données, on ne peut stabiliser aucun stabilisateur.
+    if n < 4 :
         r.append(0)
 
-    # 1 stabilisateur
-    if n >= 4: # and k >= 1 toujours vrai...
-        diff = []
-        for i in range(len(accroches)-3):
-            diff.append(accroches[i+3]-accroches[i])
-        r.append(p-(min(diff)**2))
-
-    # 2 stabilisateurs
-    if k >= 2 and n >= 8 :
-        accroches_8 = [accroches[i:i+8] for i in range(len(accroches)%8+1)]
+    else: # n >= 4
         
-        sum_carre = p*2
-        for grp in accroches_8:        
-            if ((grp[3]-grp[0])**2 + (grp[7]-grp[4])**2) < sum_carre:
-                sum_carre = (grp[3]-grp[0])**2 + (grp[7]-grp[4])**2
+        # Pour un premier stabilisateur, 
+        if k >= 1 and n >= 4 :
+            decalage = 4
+            desequilibre_4 = [accroches[i+decalage-1]-accroches[i] for i in range(n-decalage+1)]
+            r.append(p-(min(desequilibre_4)**2))
 
-        r.append(p*2 - sum_carre)
-    
+        # Pour 2 stabilisateurs (si plus de 8 accroches...)
+        if k >= 2 and n >= 8 : 
+            decalage = 8
+            accroches_8 = [accroches[i:i+decalage] for i in range(n-decalage+1)]
+            for grp in accroches_8:
+                desequilibre_8 = 2*p - ((grp[3]-grp[0])**2 + (grp[7]-grp[4])**2)
+                r.append(desequilibre_8)
 
-    # 3 stabilisateurs
-    if k == 3 and len(accroches) == 12:
-        a3 = accroches
-        r.append((p*3 -((a3[3]-a3[0])**2 + (a3[7]-a3[4])**2 + (a3[11]-a3[8])**2)))
-   
+        # 3 stabilisateurs
+        if k >= 3 and n == 12:
+            grp = accroches
+            r.append(3*p - ((grp[3]-grp[0])**2 + (grp[7]-grp[4])**2 + (grp[11]-grp[8])**2))
+
+        if n > 12:
+            r.append(0)
+
     return print(max(r))
+
 
 if __name__ == "__main__":
     n = int(input())
@@ -56,3 +50,5 @@ if __name__ == "__main__":
     p = int(input())
     accroches = list(map(int, input().split()))
     stabilite_maximale(n, k, p, accroches)
+
+    
