@@ -1,31 +1,29 @@
 
-def course(nbGrenouilles:int, nbTours:int, tours:list):
-    print()
+def course(nbGrenouilles:int, tours:list):
 
-    #print([g for g in range(1, nbGrenouilles+1)])
-    
-    jeu = [[0]*nbGrenouilles]
+    maxi_etapes = [0]*nbGrenouilles
+    etape = [0]*nbGrenouilles
 
-    for i in range(nbTours-1):
-        ele = jeu[-1].copy()
-        ele[tours[i][0]-1] += tours[i][1]
-        jeu.append(ele)
-    #print(*jeu, sep='\n')
+    for tour in tours[:-1]:
+        etape[tour[0]-1] += tour[1]
+        
+        valeur_maxi = max(etape)
+        indice_maxi = etape.index(valeur_maxi)
+
+        nbMax = 0
+        i = 0
+        while nbMax <=1 and i < nbGrenouilles:
+            if etape[i] == valeur_maxi:
+                nbMax +=1
+            i += 1
+            
+        if nbMax == 1:
+            maxi_etapes[indice_maxi] += 1
+
     
-    maxi_etapes = {i:0 for i in range(1, nbGrenouilles+1)}
-    print(maxi_etapes)
-    for etape in jeu:
-        valeur_maxi = 0
-        indice_maxi = 1
-        unique= False
-        for gre in range(len(etape)):
-            if etape[gre] > valeur_maxi and unique==False:
-                unique=True
-                valeur_maxi = etape[gre]
-                indice_maxi = gre+1
-                maxi_etapes[indice_maxi+1] += 1
-                print(f"{etape}, val={valeur_maxi}, i={indice_maxi}")
-    print(maxi_etapes)
+
+    print(1+maxi_etapes.index(max(maxi_etapes)))
+
 
 
 if __name__ == "__main__":
@@ -33,4 +31,4 @@ if __name__ == "__main__":
     nbTours = int(input())
     tours = [tuple(map(int, input().split())) for _ in range(nbTours)]
 
-    course(nbGrenouilles, nbTours, tours)
+    course(nbGrenouilles, tours)
