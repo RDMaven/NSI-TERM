@@ -22,7 +22,7 @@ class Pile:
         return self.__nbval == 0
     
     def obtenir(self):
-        return len(self.__pile)
+        return self.__nbval
 
     def getPile(self):
         return self.__pile

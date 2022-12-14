@@ -22,7 +22,7 @@ class Pile:
         return self.__nbval == 0
     
     def obtenir(self):
-        return len(self.__pile)
+        return self.__nbval
 
     def getPile(self):
         return self.__pile
@@ -56,13 +56,16 @@ class File2:
         """Ajoute l'élément e à droite de la file"""
         self.__valeurs.append(e)
         self.__nbval += 1
+        print(self.__valeurs)
     
     def defile(self):
         """Retire et renvoie l'élément de gauche de la
         file si elle est non vide"""
         assert not(self.est_vide()), "file vide !"
         self.__nbval -= 1
-        return self.__valeurs.pop(0)
+        self.__valeurs.pop(0)
+        print(self.__valeurs)
+        return self.__valeurs
 
     def lireTete(self):
         """lire la valeur à droite de la file"""
@@ -100,21 +103,22 @@ class File:
     def enfile(self, e):
         self.__entree.empiler(e)
 
+    def entree_sortie(self):
+        while not self.__entree.est_vide():
+            self.__sortie.empiler(self.__entree.lire())
+            self.__entree.deplier()
+
     def defile(self):
         if self.__sortie.est_vide():
-            while not self.__entree.est_vide():
-                e = self.__entree.lire()
-                self.__entree.deplier()
-                self.__sortie.empiler(e)
+            self.entree_sortie()
         self.__sortie.deplier()
 
     def lireTete(self):
         assert not(self.est_vide()), "file vide !"
-        if self.__entree.est_vide():
-            return self.__sortie.lire()
-        else: 
-            return self.__entree.lire()
-
+        if self.__sortie.est_vide():
+            self.entree_sortie()
+        return self.__sortie.lire()
+        
     def getEtat(self):
         return print(self.__entree.getPile(), self.__sortie.getPile())
 
