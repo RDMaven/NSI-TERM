@@ -42,7 +42,7 @@ deplacer(p2, p1)
 
 
 def etatTours(px:list): # prends p0, p2, p1 comme entrée.
-    return f"{etatPile(px[0])},     \t{etatPile(px[1])},     \t{etatPile(px[2])}"
+    return "{0:<12} {1:<12} {2:<12}".format(str(etatPile(px[0])), str(etatPile(px[1])), str(etatPile(px[2])))
 
 def resoudre(n:int, origine:list, cible:list, interm:list, ordre:list):
     """Déplacer n disques de l'origine vers la cible.
@@ -69,10 +69,9 @@ def toursHanoi(disques):
     p2 = creer_pile()
 
     empilerPl(p0, [i for i in range(disques,0,-1)])
-
-    print("\033[32;1m", f"Etat initial du jeu : {etatTours([p0,p1,p2])}")
-    print("\033[37;0m", "")
-    print("p0,     \tp1,     \tp2")
+    eI = etatTours([p0, p1, p2])
+    print("{0:<12} {1:<12} {2:<12}".format("p0","p1","p2"))
+    print(f"\033[32;1mEtat initial du jeu : \n{etatTours([p0, p1, p2])}\033[37;0m")
     resoudre(disques, p0, p2, p1, ordre=[p0,p1,p2])
 
 
