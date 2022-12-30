@@ -83,7 +83,7 @@ def espace(grid:list, dim:list):
         for ligne in range(Dy):
             ligne_str = ''.join([str(i) for i in grid[ligne]])
             _0s_ = '0'*taille_carre
-            print(ligne_str, _0s_)
+            #print(ligne_str, _0s_)
             
             decalage = 0
             while _0s_ in ligne_str:
