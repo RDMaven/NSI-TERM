@@ -1,8 +1,6 @@
 """512 points : optimize ça wsh."""
-from typing import List
 
-
-def trajets_retour(n: int, redirection: List[int]) -> None:
+def trajets_retour(n: int, redirection: list[int]) -> None:
     """
     :param n: le nombre de cinémas
     :param redirection: le lieu de redirection de chaque cinéma
