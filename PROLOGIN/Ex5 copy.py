@@ -25,7 +25,7 @@ def stabilite_maximale(n: int, k: int, p: int, accroches: list[int]) -> None:
         return x + [[accroches[0]] + y for y in x]
        
     rep = set([tuple(sorted(x)) for x in subsets(accroches) if len(x)==4])
-    
+    print(rep)
     stabilite  = {}
     smart_choices = {}
 
