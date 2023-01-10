@@ -1,14 +1,17 @@
-"""PERFECT."""
-from typing import List
+def nombre_films(adore: list[str], deteste: list[str]) -> None:
+    """ Affiche, sur une ligne, le nombre de films qui sont uniquement adorés.
 
+    Args:
+        adore (List[str]): liste des noms du film adoré de chaque personne
+        deteste (List[str]): liste des noms du film détesté de chaque personne
 
-def nombre_films(adore: List[str], deteste: List[str]) -> None:
+    Returns:
+        None : Affichage du nombre de films uniquement adorés.
     """
-    :param adore: liste des noms du film adoré de chaque personne
-    :param deteste: liste des noms du film détesté de chaque personne
-    """
-    # TODO Afficher, sur une ligne, le nombre de films qui sont uniquement
-    # adorés.
+    
+    # Calcul la différence entre le nombre de films uniques au total (adoré ou detesté) et le nombre de films uniques detestés.
+    # suivant l'égalité :    uniques_adorés + uniques_détéstés = uniques_total
+    #                     => uniques_adorés = uniques_total - uniques_détéstés
     return print(len(set(adore+deteste))-len(set(deteste)))
 
 

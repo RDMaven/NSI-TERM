@@ -1,4 +1,5 @@
-def mise_en_boite(n: int, restes: list[int], boites: list[int]) -> None:
+
+def mise_en_boite(n: int, restes: list[int], boites: list[int], i:int, r:int) -> None:
     """ Affiche sur une ligne le nombre maximum de restes que l'on peut mettre en boîte.
 
     Args:
@@ -9,19 +10,21 @@ def mise_en_boite(n: int, restes: list[int], boites: list[int]) -> None:
     Returns:
         _type_: _description_
     """
-
-    while restes:
-
-        if max(restes) > max(boites) :
-            n -= 1
+    if i == n:
+        return print(r)
+    else:        
+        if restes[0] > boites[0]:
+            r -= 1
         else:
-            boites.remove(max(boites))
-        restes.remove(max(restes))
+            boites = boites[1:]
 
-    return print(n)
+        mise_en_boite(n, restes[1:], boites, i+1, r)
+
 
 if __name__ == "__main__":
     n = int(input())
     restes = list(map(int, input().split()))
     boites = list(map(int, input().split()))
-    mise_en_boite(n, restes, boites)
+    restes.sort(reverse=True)
+    boites.sort(reverse=True)
+    mise_en_boite(n, restes, boites, i=0, r=n)

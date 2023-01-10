@@ -11,17 +11,18 @@ def mise_en_boite(n: int, restes: list[int], boites: list[int]) -> None:
     """
 
     while restes:
-
-        if max(restes) > max(boites) :
+        r = max(restes)
+        b = max(boites)
+        if r > b :
             n -= 1
         else:
-            boites.remove(max(boites))
-        restes.remove(max(restes))
+            boites.remove(b)
+        restes.remove(r)
 
-    return print(n)
+    return n # = n- len(boites)
 
 if __name__ == "__main__":
     n = int(input())
     restes = list(map(int, input().split()))
     boites = list(map(int, input().split()))
-    mise_en_boite(n, restes, boites)
+    print(mise_en_boite(n, restes, boites))
