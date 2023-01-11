@@ -1,9 +1,6 @@
-"""PERFECT."""
 import re
-from typing import List
 
-
-def nb_pas_malin_drome(n: int, mots: List[str]) -> None:
+def nb_pas_malin_drome(n: int, mots: list[str]) -> None:
     """
     :param n: Le nombre de mots de passe contenus dans le fichier de mots de passe de Raphaël
     :param mots: La liste des mots de passe à décoder
